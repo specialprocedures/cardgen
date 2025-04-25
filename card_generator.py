@@ -101,6 +101,12 @@ def main():
             try:
                 # Convert row to dict and handle image path
                 card_dict = card_data.to_dict()
+
+                # Ensure cost is an integer
+                cost = card_dict.get("cost", None)
+                if cost is not None:
+                    card_dict["cost"] = int(cost)
+
                 card_dict["image_url"] = get_image_path(card_dict["id"], base_dir)
 
                 # Render the card HTML
