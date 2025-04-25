@@ -36,7 +36,8 @@ event_6,Advance Australia Fair,Event,,1,The player with the most units on Austra
 For we are young and free
 We've golden soil and wealth for toil
 Our home is girt by sea","Peter Dodds McCormick, 1878",img/cards/event_6.webp,styles/base.css,styles/event.css
-event_7,Safe European Home,Event,,1,The player with the most units on Europe gains that continent's bonus if they are not recieving it already this round. Roll dice in case of tie.,"I went to the place where every white face Is an invitation to robbery
+event_7,Safe European Home,Event,,1,The player with the most units on Europe gains that continent's bonus if they are not recieving it already this round. Roll dice in case of tie.,"I went to the place where every white face
+Is an invitation to robbery
 And sitting here in my safe European home
 Don't want to go back there again","Joe Strummer, 1978",img/cards/event_7.webp,styles/base.css,styles/event.css
 event_8,Project for a New American Century,Event,,1,The player with the most units on North America gains that continent's bonus if they are not recieving it already this round. Roll dice in case of tie.,"The process of transformation, even if it brings revolutionary change, is likely to be a long one, absent some catastrophic and catalyzing event – like a new Pearl Harbor.","Project for a New American Century, 2000",img/cards/event_8.jpg,styles/base.css,styles/event.css
@@ -51,7 +52,7 @@ event_13,Managed Decline,Event,,1,The player with the most units on Europe gains
 event_14,Make America Great Again,Event,,1,The player with the most units on North America gains no troops or gold in their upkeep this round. Roll dice in case of tie.,"My priorities are to deport violent criminals, terrorists, and anyone who threatens our safety.","Hillary Rodham Clinton, 2016",img/cards/event_14.webp,styles/base.css,styles/event.css
 event_15,The Open Veins of Latin America,Event,,1,The player with the most units on South America gains no troops or gold in their upkeep this round. Roll dice in case of tie.,"Latin America is the region of open veins. Everything from the discovery until our times, has always been transmuted into European--or later--United States-- capital.","Eduardo Galeano, 1971",img/cards/event_15.jpg,styles/base.css,styles/event.css
 ,Regional identity,Event,,1,Regional bonuses may be gained with one fewer territories this round.,,,img/cards/event_16.jpg,styles/base.css,styles/event.css
-,,Event,,1,Players do not gain regional bonuses this round.,,,img/cards/event_17.jpg,styles/base.css,styles/event.css
+,Election Interference,Event,,1,Players do not gain regional bonuses this round.,,,img/cards/event_17.jpg,styles/base.css,styles/event.css
 ,Pirate Bay,Event,,1,Players may play actions for free this round,,,img/cards/event_18.jpg,styles/base.css,styles/event.css
 ,Wikileaks,Event,,1,Players play with their hand revealed for the duration of the round,,,img/cards/event_19.jpg,styles/base.css,styles/event.css
 ,Fast Track,Event,,1,Players get an additional troop movement at the end of their turn this round,,,img/cards/event_20.jpg,styles/base.css,styles/event.css
