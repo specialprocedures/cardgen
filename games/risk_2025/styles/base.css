@@ -106,7 +106,7 @@
         "footer footer";
 
     /* gap: 5px; Add space between grid items */
-    outline: 1px solid rgb(0, 0, 0);
+    outline: 1px solid rgb(255, 255, 255);
 }
 
 /* Basic styling for the new fields - you'll need to refine these */
@@ -138,7 +138,7 @@
     grid-area: name;
     z-index: -1;
     background-image: url("../img/style/stoned.jpg");
-    outline: 1px solid black;
+    outline: 1px solid rgb(255, 255, 255);
 }
 
 .card-type,
@@ -151,7 +151,7 @@
     grid-area: type;
     font-weight: bold;
     background-image: url("../img/style/stoned.jpg");
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid rgb(255, 255, 255);
 }
 
 .card-type {
@@ -173,7 +173,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    outline: 1px solid black;
+    outline: 1px solid rgb(255, 255, 255);
     overflow: hidden;
 }
 
@@ -225,7 +225,7 @@
     grid-area: footer;
     align-self: end;
     font-size: 0.4em;
-    border-top: 1px solid black;
+    border-top: 1px solid rgb(255, 255, 255);
     background-image: url("../img/style/stoned.jpg");
     color: white;
     padding: 2px 4px;
