@@ -1,0 +1,16 @@
+id,name,type,cost,count,effect,quote,source
+,Conscription,Action,2,4,"Roll a die, you gain units equal to the number rolled in any one territory you control.","If I were slightly younger and not employed here, I think it would be a fantastic experience to be on the front lines of helping this young democracy succeed.","George W. Bush, 2008"
+,Shock and awe,Action,2,4,"Roll a die, target player sacrifices units equal to the number rolled in any one territory of your choice.","We will bomb the living bejeezus out of North Vietnam, and then if anybody interferes we will threaten the nuclear weapon.","Richard Nixon, 1972"
+,Privatised gains,Action,0,4,"Roll a die, you gain EUR equal to the number rolled.",I didn't get to be successful by letting people hurt Blackstone or me.,"Stephen Schwarzman, 2007"
+,Socialised losses,Action,2,4,"Roll a die, target player loses EUR equal to the number rolled.",My administration is the only thing between you and the pitchfolks.,"Barack Obama, 2009"
+,PsyOps,Action,2,4,Target player discards two cards.,"I have absolutely no doubt whatsoever that my clearly stated support for the right of Palestinian people to be able to live in peace free from occupation, free from being under siege as in Gaza […] played a factor in all this.","Jeremy Corbyn, 2022"
+,Propaganda,Action,2,4,You may draw two cards.,"[Saddam] has existing and active military plans for the use of chemical and biological weapons, which could be activated within 45 minutes, including against his own Shia population, and that he is actively trying to acquire nuclear weapons capability. ","Tony Blair, 2002"
+,Fake news,Action,2,4,Play as an opponent plays an Action. This action has no effect and is discarded with full cost played.,"They're eating the dogs, the people that came in, they're eating the cat .. They’re eating the pets of the people that live there.","Donald Trump, 2024"
+,,,,,,,
+,Kompromat,Action,4,2,"At the beginning of your turn, select a territory that you do not control. You may make up to three attacks with the units in that territory as if they were your own.",I’ve known Jeff for fifteen years. Terrific guy […] He’s a lot of fun to be with. It is even said that he likes beautiful women as much as I do.,"Donald Trump, 2002"
+,Advanced weaponary,Action,3,2,Units in or attacking from target territory get +1 to all dice rolls until the end of this turn.,,
+,,,,,,,
+,,,,,,,
+,Economic sanctions,Event,,2,Players vote to select a player. That player gains no troops or EUR during their upkeep phase this round.,"I think that is a very hard choice, but the price, we think, the price is worth it.","Madeline Albright, 1996"
+,Boom,Event,,2,All players gain 5 EUR,We will never return to the old boom and bust,"Gordon Brown, 2007"
+,Bust,Event,,2,All players loose 5 EUR,"We didn't understand how risk was spread across the system, we didn't understand the entanglements of different institutions","Gordon Brown, 2011"

@@ -1,0 +1,88 @@
+.trading-card {
+    /* This outer container can help with overall page layout if placing multiple cards later */
+    /* For single card generation, its primary role is to contain the bleed area */
+    width: 2.72in; /* Corresponds to the bleed width */
+    height: 3.7in; /* Corresponds to the bleed height */
+    margin: 0; /* No margin needed for the card itself, layout handled by body/container */
+    padding: 0; /* No padding needed for the card itself */
+    position: relative; /* Needed for positioning inner elements */
+    overflow: hidden; /* Hide anything outside the bleed */
+}
+
+.bleed-area {
+    width: 100%; /* Takes full size of trading-card */
+    height: 100%; /* Takes full size of trading-card */
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Add background image or color here */
+    background-color: #f0f0f0; /* Example background */
+    /* background-image: url('your_background_image.png'); */
+    background-size: cover;
+    background-position: center;
+}
+
+.cut-area {
+    /* This area represents the final card size */
+    width: 2.48in; /* Cut width */
+    height: 3.46in; /* Cut height */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the cut area within the bleed */
+    /* Optional: Add a temporary border here during testing to visualize the cut line */
+    /* border: 1px dashed blue; */
+}
+
+.safe-area {
+    /* This area is where important content should reside */
+    width: 2.28in; /* Safe width */
+    height: 3.27in; /* Safe height */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the safe area within the cut area */
+    padding: 5px; /* Add some padding inside the safe area */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+    /* Optional: Add a temporary border here during testing to visualize the safe line */
+    /* border: 1px dashed red; */
+
+    /* Add flexbox or grid here to layout the card fields */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Distribute space between elements */
+}
+
+/* Basic styling for the new fields - you'll need to refine these */
+.card-id, .card-name, .card-type, .card-cost, .card-count, .card-effect, .card-quote, .card-source {
+    margin-bottom: 5px; /* Add some space between elements */
+    font-family: sans-serif;
+    color: #333;
+}
+
+.card-name {
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.card-image img {
+    display: block;
+    max-width: 100%;
+    height: auto; /* Maintain aspect ratio */
+    margin: 5px auto; /* Center image and add vertical space */
+}
+
+.card-effect, .card-quote {
+    font-size: 0.8em;
+    text-align: justify;
+    font-style: italic;
+}
+
+.card-source {
+    font-size: 0.7em;
+    text-align: right;
+    margin-top: auto; /* Push source to the bottom if using flexbox column */
+}
+
+/* Add more specific styling for each field as needed */

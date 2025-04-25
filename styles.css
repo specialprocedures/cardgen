@@ -1,0 +1,147 @@
+.trading-card {
+    /* This outer container can help with overall page layout if placing multiple cards later */
+    /* For single card generation, its primary role is to contain the bleed area */
+    width: 2.72in; /* Corresponds to the bleed width */
+    height: 3.7in; /* Corresponds to the bleed height */
+    margin: 0; /* No margin needed for the card itself, layout handled by body/container */
+    padding: 0; /* No padding needed for the card itself */
+    position: relative; /* Needed for positioning inner elements */
+    overflow: hidden; /* Hide anything outside the bleed */
+    border: 1px dashed blue;
+    background-color: #000000; /* Example background */
+}
+
+.bleed-area {
+    width: 100%; /* Takes full size of trading-card */
+    height: 100%; /* Takes full size of trading-card */
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Add background image or color here */
+    background-color: #921010; /* Example background */
+    /* background-image: url('your_background_image.png'); */
+    background-size: cover;
+    background-position: center;
+}
+
+.cut-area {
+    /* This area represents the final card size */
+    width: 2.48in; /* Cut width */
+    height: 3.46in; /* Cut height */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the cut area within the bleed */
+    /* Optional: Add a temporary border here during testing to visualize the cut line */
+    border: 1px dashed blue;
+    background-color: #000000; /* Example background */
+}
+
+.safe-area {
+    /* This area is where important content should reside */
+    width: 2.28in; /* Safe width */
+    height: 3.27in; /* Safe height */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the safe area within the cut area */
+    /* padding: 5px; Add some padding inside the safe area */
+    box-sizing: border-box; /* Include padding in the element's total width and height */
+    /* Optional: Add a temporary border here during testing to visualize the safe line */
+    /* border: 1px dashed red; */
+    background-color: #c1bbbb; /* Example background */
+    display: grid;
+    grid-template-columns: 1.14in 1.14in; /* Split the 2.28in width evenly */
+
+    /* Define your grid rows - adjust as needed */
+    grid-template-rows: 1fr 3fr 1fr 1fr 1fr; /* Example: rows for ID/Name, Type/Cost/Count, Image/Effect, Quote, Source */
+    /* grid-template-rows: repeat(6, auto); */
+
+    /* Define named grid areas for easier placement */
+    grid-template-areas:
+        "name name"
+        "image image"
+        "type cost"
+        "body body"
+        "footer footer";
+
+    /* gap: 5px; Add space between grid items */
+
+}
+
+/* Basic styling for the new fields - you'll need to refine these */
+.card-id, .card-name, .card-type, .card-cost, .card-count, .card-effect, .card-quote, .card-source {
+    font-family: sans-serif;
+    font-size: .5em;
+    color: #333;
+    margin: 0.05in;
+}
+
+.card-name {
+    font-size: .7em;
+    font-weight: bold;
+    text-align: center;
+    grid-area: name;
+    background-color: pink;
+}
+
+.card-type {
+    grid-area: type;
+    text-align: left;
+    font-weight: bold;
+    background-color: darkcyan;
+}
+
+.card-cost {
+    grid-area: cost;
+    font-weight: bold;
+    text-align: right;
+    background-color: darkcyan;
+}
+
+.card-count {
+    grid-area: count;
+}
+
+.card-image {
+    grid-area: image;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.card-image img {
+    display: block;
+    max-width: 100%;
+    height: auto; 
+    /* margin: 5px auto; */
+}
+.card-body{
+    grid-area: body;
+    background-color: aqua;
+}
+.card-effect {
+    grid-area: effect;
+    text-align: justify;
+    /* font-style: italic; */
+}
+
+.card-quote {
+    grid-area: quote;
+    text-align: justify;
+    font-style: italic;
+}
+
+.card-source {
+    grid-area: source;
+    text-align: right;
+    margin-top: bottom; 
+    background-color: blueviolet;
+}
+
+.card-footer {
+    grid-area: footer;
+    align-self: end;  /* Aligns content to bottom of grid area */
+    text-align: center;
+    font-size: 0.4em;
+    background-color: chocolate;
+}
