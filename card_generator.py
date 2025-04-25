@@ -59,26 +59,41 @@ def nl2br(value):
     return result
 
 
-def find_css_file(game_dir: Path, css_filename: str) -> Path:
-    """Look for CSS file in styles directory first, then as a full path."""
-    # Check in styles directory
-    styles_dir = game_dir / "styles"
-    if styles_dir.exists():
-        css_path = styles_dir / css_filename
-        if css_path.exists():
-            return css_path
+def get_style_links(base_dir, card_dict):
+    """Generate style link tags based on the card's style configuration"""
+    style_links = []
 
-    # Check as full path
-    css_path = Path(css_filename)
-    if css_path.exists():
-        return css_path
+    # Add base stylesheet if specified
+    if "style_path" in card_dict and card_dict["style_path"]:
+        style_path = os.path.join(base_dir, card_dict["style_path"])
+        if os.path.exists(style_path):
+            style_links.append(
+                f'<link rel="stylesheet" href="file://{os.path.abspath(style_path)}">'
+            )
+        else:
+            print(f"Warning: Style file not found: {style_path}")
 
-    # Check in game directory
-    css_path = game_dir / css_filename
-    if css_path.exists():
-        return css_path
+    # Add supplementary stylesheet if specified
+    if "supplementary_style" in card_dict and card_dict["supplementary_style"]:
+        supp_style_path = os.path.join(base_dir, card_dict["supplementary_style"])
+        if os.path.exists(supp_style_path):
+            style_links.append(
+                f'<link rel="stylesheet" href="file://{os.path.abspath(supp_style_path)}">'
+            )
+        else:
+            print(f"Warning: Supplementary style file not found: {supp_style_path}")
 
-    raise FileNotFoundError(f"CSS file not found: {css_filename}")
+    # If no valid styles found, fall back to default styles.css
+    if not style_links:
+        default_style = os.path.join(base_dir, "styles.css")
+        if os.path.exists(default_style):
+            style_links.append(
+                f'<link rel="stylesheet" href="file://{os.path.abspath(default_style)}">'
+            )
+        else:
+            print("Warning: No valid stylesheets found, card may not render correctly")
+
+    return "\n".join(style_links)
 
 
 def main():
@@ -151,6 +166,9 @@ def main():
                         f"Warning: No image path specified for card {card_dict['id']}"
                     )
 
+                # Get style links for this card
+                style_links = get_style_links(base_dir, card_dict)
+
                 # Render the card HTML
                 card_html = template.render(card=card_dict)
 
@@ -165,7 +183,7 @@ def main():
                 <html>
                 <head>
                     <base href="file://{os.path.abspath(base_dir)}/">
-                    {css_links}
+                    {style_links}
                 </head>
                 <body>
                 {card_html}
