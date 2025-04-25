@@ -86,8 +86,8 @@ def get_style_links(base_dir, card_dict):
     style_links = []
 
     # Add base stylesheet if specified
-    if "style_path" in card_dict and card_dict["style_path"]:
-        style_path = os.path.join(base_dir, card_dict["style_path"])
+    if "style_path" in card_dict and pd.notna(card_dict["style_path"]):
+        style_path = os.path.join(base_dir, str(card_dict["style_path"]))
         if os.path.exists(style_path):
             style_links.append(
                 f'<link rel="stylesheet" href="file://{os.path.abspath(style_path)}">'
@@ -96,8 +96,10 @@ def get_style_links(base_dir, card_dict):
             print(f"Warning: Style file not found: {style_path}")
 
     # Add supplementary stylesheet if specified
-    if "supplementary_style" in card_dict and card_dict["supplementary_style"]:
-        supp_style_path = os.path.join(base_dir, card_dict["supplementary_style"])
+    if "supplementary_style" in card_dict and pd.notna(
+        card_dict["supplementary_style"]
+    ):
+        supp_style_path = os.path.join(base_dir, str(card_dict["supplementary_style"]))
         if os.path.exists(supp_style_path):
             style_links.append(
                 f'<link rel="stylesheet" href="file://{os.path.abspath(supp_style_path)}">'
@@ -179,9 +181,9 @@ def main():
                         card_dict[key] = int(val)
 
                 # Use image_path from CSV and make it absolute
-                if card_dict.get("image_path"):
+                if pd.notna(card_dict.get("image_path")):
                     card_dict["image_url"] = os.path.abspath(
-                        os.path.join(base_dir, card_dict["image_path"])
+                        os.path.join(base_dir, str(card_dict["image_path"]))
                     )
                 else:
                     print(
