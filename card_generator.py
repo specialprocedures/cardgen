@@ -26,13 +26,6 @@ def parse_args():
         default="firefox",
         help="Browser to use for rendering",
     )
-    parser.add_argument(
-        "--styles",
-        type=str,
-        nargs="+",
-        default=["styles.css"],
-        help="CSS files to use for styling. Will look in styles/ directory first, then as full paths",
-    )
     return parser.parse_args()
 
 
@@ -57,28 +50,6 @@ def setup_webdriver(browser_name):
 def nl2br(value):
     result = value.replace("\n", "<br>")
     return result
-
-
-def find_css_file(game_dir: Path, css_filename: str) -> Path:
-    """Look for CSS file in styles directory first, then as a full path."""
-    # Check in styles directory
-    styles_dir = game_dir / "styles"
-    if styles_dir.exists():
-        css_path = styles_dir / css_filename
-        if css_path.exists():
-            return css_path
-
-    # Check as full path
-    css_path = Path(css_filename)
-    if css_path.exists():
-        return css_path
-
-    # Check in game directory
-    css_path = game_dir / css_filename
-    if css_path.exists():
-        return css_path
-
-    raise FileNotFoundError(f"CSS file not found: {css_filename}")
 
 
 def get_style_links(base_dir, card_dict):
@@ -134,19 +105,6 @@ def main():
         if not path.exists():
             raise FileNotFoundError(f"{name} file not found: {path}")
 
-    # Find all CSS files
-    css_files = []
-    for css_file in args.styles:
-        try:
-            css_path = find_css_file(game_dir, css_file)
-            css_files.append(css_path)
-        except FileNotFoundError as e:
-            print(f"Warning: {e}")
-            continue
-
-    if not css_files:
-        raise FileNotFoundError("No CSS files found")
-
     # Set up paths
     base_dir = str(game_dir)
     cards_dir = game_dir / "cards"
@@ -196,12 +154,7 @@ def main():
                 # Render the card HTML
                 card_html = template.render(card=card_dict)
 
-                # Create full HTML with CSS
-                css_links = "\n".join(
-                    f'<link rel="stylesheet" href="file://{css_file.absolute()}">'
-                    for css_file in css_files
-                )
-
+                # Create full HTML with styles
                 full_html_string = f"""
                 <!DOCTYPE html>
                 <html>

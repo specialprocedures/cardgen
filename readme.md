@@ -51,9 +51,23 @@ games/
    - quote: Flavor text (optional)
    - source: Quote source (optional)
    - image_path: Path to the card's image file, relative to the game directory
+   - style_path: Path to the card's base CSS file (optional)
+   - supplementary_style: Path to additional CSS file for this card (optional)
 
 2. `card_template.html`: HTML template using Jinja2 syntax
-3. CSS file(s): At least one CSS file is required, either in the styles/ directory or specified via command line
+3. CSS file(s): At least one CSS file is required. The system will look for CSS files in the following order:
+   1. Per-card style files specified in the CSV (style_path and supplementary_style)
+   2. CSS files specified via --styles argument in the styles/ directory
+   3. CSS files specified via --styles at their full path
+   4. CSS files specified via --styles in the game directory
+   5. Default styles.css in the game directory
+
+## CSV Data Handling
+
+- Empty cells in the CSV are handled gracefully
+- Optional columns (quote, source, style_path, supplementary_style) can be left blank
+- Numeric values (cost) are automatically converted to integers
+- Each card is assigned a serial number based on its position in the CSV
 
 ## CLI Options
 
@@ -65,26 +79,16 @@ Arguments:
 
 Options:
   --browser TEXT    Browser to use for rendering: firefox|chrome|edge (default: firefox)
-  --styles TEXT...  CSS files to use for styling. Will look for files in the following order:
-                    1. In the styles/ directory of the game directory
-                    2. At the specified full path
-                    3. In the game directory
-                    (default: styles.css)
 ```
 
 ### Examples
 
-Use the default styles.css:
+Basic usage:
 ```bash
 python card_generator.py games/my_game
 ```
 
-Use multiple CSS files:
+Using Chrome for rendering:
 ```bash
-python card_generator.py games/my_game --styles base.css custom.css
-```
-
-Use CSS files from different locations:
-```bash
-python card_generator.py games/my_game --styles styles/base.css /path/to/custom.css
+python card_generator.py games/my_game --browser chrome
 ```
