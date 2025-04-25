@@ -52,6 +52,43 @@ def nl2br(value):
     return result
 
 
+def get_style_links(base_dir, card_dict):
+    """Generate style link tags based on the card's style configuration"""
+    style_links = []
+
+    # Add base stylesheet if specified
+    if "style_path" in card_dict and card_dict["style_path"]:
+        style_path = os.path.join(base_dir, card_dict["style_path"])
+        if os.path.exists(style_path):
+            style_links.append(
+                f'<link rel="stylesheet" href="file://{os.path.abspath(style_path)}">'
+            )
+        else:
+            print(f"Warning: Style file not found: {style_path}")
+
+    # Add supplementary stylesheet if specified
+    if "supplementary_style" in card_dict and card_dict["supplementary_style"]:
+        supp_style_path = os.path.join(base_dir, card_dict["supplementary_style"])
+        if os.path.exists(supp_style_path):
+            style_links.append(
+                f'<link rel="stylesheet" href="file://{os.path.abspath(supp_style_path)}">'
+            )
+        else:
+            print(f"Warning: Supplementary style file not found: {supp_style_path}")
+
+    # If no valid styles found, fall back to default styles.css
+    if not style_links:
+        default_style = os.path.join(base_dir, "styles.css")
+        if os.path.exists(default_style):
+            style_links.append(
+                f'<link rel="stylesheet" href="file://{os.path.abspath(default_style)}">'
+            )
+        else:
+            print("Warning: No valid stylesheets found, card may not render correctly")
+
+    return "\n".join(style_links)
+
+
 def main():
     args = parse_args()
     game_dir = Path(args.game_dir)
@@ -60,7 +97,6 @@ def main():
     required_files = {
         "CSV": game_dir / "cards.csv",
         "Template": game_dir / "card_template.html",
-        "Styles": game_dir / "styles.css",
     }
 
     for name, path in required_files.items():
@@ -110,6 +146,9 @@ def main():
                         f"Warning: No image path specified for card {card_dict['id']}"
                     )
 
+                # Get style links for this card
+                style_links = get_style_links(base_dir, card_dict)
+
                 # Render the card HTML
                 card_html = template.render(card=card_dict)
 
@@ -119,7 +158,7 @@ def main():
                 <html>
                 <head>
                     <base href="file://{os.path.abspath(base_dir)}/">
-                    <link rel="stylesheet" href="file://{os.path.abspath(required_files['Styles'])}">
+                    {style_links}
                 </head>
                 <body>
                 {card_html}
