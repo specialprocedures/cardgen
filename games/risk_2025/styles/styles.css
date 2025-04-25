@@ -1,20 +1,20 @@
 @font-face {
     font-family: 'Dirty';
-    src: url('fonts/dirty.otf') format('truetype');
+    src: url('../fonts/dirty.otf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Capture';
-    src: url('fonts/capture.ttf') format('truetype');
+    src: url('../fonts/capture.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
 @font-face {
     font-family: 'Anton';
-    src: url('fonts/Anton-Regular.ttf') format('truetype');
+    src: url('../fonts/Anton-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -36,7 +36,7 @@
     overflow: hidden;
     /* Hide anything outside the bleed */
     /* background-color: #000000; Example background */
-    background-image: url("img/style/dark.jpg");
+    background-image: url("../img/style/dark.jpg");
     background-size: cover;
 }
 
@@ -137,7 +137,7 @@
     width: 100%;
     grid-area: name;
     z-index: -1;
-    background-image: url("img/style/stoned.jpg");
+    background-image: url("../img/style/stoned.jpg");
     outline: 1px solid black;
 }
 
@@ -150,7 +150,7 @@
     color: white;
     grid-area: type;
     font-weight: bold;
-    background-image: url("img/style/stoned.jpg");
+    background-image: url("../img/style/stoned.jpg");
     border-bottom: 1px solid black;
 }
 
@@ -226,7 +226,7 @@
     align-self: end;
     font-size: 0.4em;
     border-top: 1px solid black;
-    background-image: url("img/style/stoned.jpg");
+    background-image: url("../img/style/stoned.jpg");
     color: white;
     padding: 2px 4px;
     display: flex;

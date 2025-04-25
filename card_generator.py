@@ -17,7 +17,7 @@ def parse_args():
     parser.add_argument(
         "game_dir",
         type=str,
-        help="Path to the game directory containing cards.csv, card_template.html, and styles.css",
+        help="Path to the game directory containing cards.csv and card_template.html",
     )
     parser.add_argument(
         "--browser",
@@ -25,6 +25,13 @@ def parse_args():
         choices=["firefox", "chrome", "edge"],
         default="firefox",
         help="Browser to use for rendering",
+    )
+    parser.add_argument(
+        "--styles",
+        type=str,
+        nargs="+",
+        default=["styles.css"],
+        help="CSS files to use for styling. Will look in styles/ directory first, then as full paths",
     )
     return parser.parse_args()
 
@@ -52,6 +59,28 @@ def nl2br(value):
     return result
 
 
+def find_css_file(game_dir: Path, css_filename: str) -> Path:
+    """Look for CSS file in styles directory first, then as a full path."""
+    # Check in styles directory
+    styles_dir = game_dir / "styles"
+    if styles_dir.exists():
+        css_path = styles_dir / css_filename
+        if css_path.exists():
+            return css_path
+
+    # Check as full path
+    css_path = Path(css_filename)
+    if css_path.exists():
+        return css_path
+
+    # Check in game directory
+    css_path = game_dir / css_filename
+    if css_path.exists():
+        return css_path
+
+    raise FileNotFoundError(f"CSS file not found: {css_filename}")
+
+
 def main():
     args = parse_args()
     game_dir = Path(args.game_dir)
@@ -60,12 +89,24 @@ def main():
     required_files = {
         "CSV": game_dir / "cards.csv",
         "Template": game_dir / "card_template.html",
-        "Styles": game_dir / "styles.css",
     }
 
     for name, path in required_files.items():
         if not path.exists():
             raise FileNotFoundError(f"{name} file not found: {path}")
+
+    # Find all CSS files
+    css_files = []
+    for css_file in args.styles:
+        try:
+            css_path = find_css_file(game_dir, css_file)
+            css_files.append(css_path)
+        except FileNotFoundError as e:
+            print(f"Warning: {e}")
+            continue
+
+    if not css_files:
+        raise FileNotFoundError("No CSS files found")
 
     # Set up paths
     base_dir = str(game_dir)
@@ -114,12 +155,17 @@ def main():
                 card_html = template.render(card=card_dict)
 
                 # Create full HTML with CSS
+                css_links = "\n".join(
+                    f'<link rel="stylesheet" href="file://{css_file.absolute()}">'
+                    for css_file in css_files
+                )
+
                 full_html_string = f"""
                 <!DOCTYPE html>
                 <html>
                 <head>
                     <base href="file://{os.path.abspath(base_dir)}/">
-                    <link rel="stylesheet" href="file://{os.path.abspath(required_files['Styles'])}">
+                    {css_links}
                 </head>
                 <body>
                 {card_html}

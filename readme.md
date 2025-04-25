@@ -32,7 +32,10 @@ games/
     your_game/
         card_template.html  # HTML template for cards
         cards.csv          # Card data
-        styles.css         # Card styling
+        styles/           # Directory for CSS files (optional)
+            base.css      # Base styles
+            custom.css    # Additional styles
+        styles.css        # Default CSS file (optional if using styles directory)
         img/              # Image directory (can be organized as needed)
         fonts/           # Custom fonts (optional)
 ```
@@ -50,7 +53,7 @@ games/
    - image_path: Path to the card's image file, relative to the game directory
 
 2. `card_template.html`: HTML template using Jinja2 syntax
-3. `styles.css`: CSS styling for cards
+3. CSS file(s): At least one CSS file is required, either in the styles/ directory or specified via command line
 
 ## CLI Options
 
@@ -58,14 +61,30 @@ games/
 python card_generator.py [GAME_DIR] [OPTIONS]
 
 Arguments:
-  GAME_DIR          Path to the game directory containing cards.csv, card_template.html, and styles.css
+  GAME_DIR          Path to the game directory containing cards.csv and card_template.html
 
 Options:
   --browser TEXT    Browser to use for rendering: firefox|chrome|edge (default: firefox)
+  --styles TEXT...  CSS files to use for styling. Will look for files in the following order:
+                    1. In the styles/ directory of the game directory
+                    2. At the specified full path
+                    3. In the game directory
+                    (default: styles.css)
 ```
 
-## Output
+### Examples
 
-The generator creates two files for each card in the game directory's `cards` folder:
-1. An HTML file for debugging and style adjustments
-2. A PNG file of the rendered card
+Use the default styles.css:
+```bash
+python card_generator.py games/my_game
+```
+
+Use multiple CSS files:
+```bash
+python card_generator.py games/my_game --styles base.css custom.css
+```
+
+Use CSS files from different locations:
+```bash
+python card_generator.py games/my_game --styles styles/base.css /path/to/custom.css
+```
