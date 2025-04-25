@@ -59,6 +59,28 @@ def nl2br(value):
     return result
 
 
+def find_css_file(game_dir: Path, css_filename: str) -> Path:
+    """Look for CSS file in styles directory first, then as a full path."""
+    # Check in styles directory
+    styles_dir = game_dir / "styles"
+    if styles_dir.exists():
+        css_path = styles_dir / css_filename
+        if css_path.exists():
+            return css_path
+
+    # Check as full path
+    css_path = Path(css_filename)
+    if css_path.exists():
+        return css_path
+
+    # Check in game directory
+    css_path = game_dir / css_filename
+    if css_path.exists():
+        return css_path
+
+    raise FileNotFoundError(f"CSS file not found: {css_filename}")
+
+
 def get_style_links(base_dir, card_dict):
     """Generate style link tags based on the card's style configuration"""
     style_links = []
