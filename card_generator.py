@@ -132,12 +132,15 @@ def main():
 
                 card_dict["total_cards"] = len(df)
 
-                # Ensure cost is an integer
-                for key in ["cost", "serial_number"]:
-                    val = card_dict.get(key, None)
-                    if val is not None:
-                        card_dict[key] = int(val)
+                # Handle cost - convert to int if present, otherwise empty string
+                if pd.notna(card_dict.get("cost")):
+                    card_dict["cost"] = int(card_dict["cost"])
+                else:
+                    card_dict["cost"] = ""
 
+                # Handle serial number
+                card_dict["serial_number"] = int(card_dict["serial_number"])
+                
                 # Use image_path from CSV and make it absolute
                 if pd.notna(card_dict.get("image_path")):
                     card_dict["image_url"] = os.path.abspath(
