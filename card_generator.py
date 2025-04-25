@@ -48,7 +48,7 @@ def setup_webdriver(browser_name):
 
 # Setup parser for newlines in text
 def nl2br(value):
-    result = value.replace("\n\n", "<br>")
+    result = value.replace("\n", "<br>")
     return result
 
 
@@ -81,12 +81,6 @@ def main():
     df = pd.read_csv(required_files["CSV"], lineterminator="\n")
     df = df.dropna(subset=["id"])  # Drop rows without an id
 
-    # Handle newlines in text fields
-    text_columns = ["effect", "quote", "source"]
-    for col in text_columns:
-        if col in df.columns:
-            df[col] = df[col].str.replace("\n", "\n\n")
-
     # Initialize webdriver
     driver = setup_webdriver(args.browser)
 
@@ -97,10 +91,13 @@ def main():
                 # Convert row to dict and handle image path
                 card_dict = card_data.to_dict()
 
+                card_dict["total_cards"] = len(df)
+
                 # Ensure cost is an integer
-                cost = card_dict.get("cost", None)
-                if cost is not None:
-                    card_dict["cost"] = int(cost)
+                for key in ["cost", "serial_number"]:
+                    val = card_dict.get(key, None)
+                    if val is not None:
+                        card_dict[key] = int(val)
 
                 # Use image_path from CSV and make it absolute
                 if card_dict.get("image_path"):
