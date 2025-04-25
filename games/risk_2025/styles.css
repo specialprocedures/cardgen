@@ -201,6 +201,7 @@
     color: black;
     padding: 2.5%;
     padding-bottom: 0;
+    white-space: pre-wrap;
 }
 
 .card-source {

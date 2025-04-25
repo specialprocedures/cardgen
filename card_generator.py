@@ -1,4 +1,5 @@
 import os
+import re
 import pandas as pd
 from pathlib import Path
 import argparse
@@ -74,6 +75,12 @@ def get_image_path(card_id, base_dir):
         raise FileNotFoundError(f"No image found for {card_id}")
 
 
+# Setup parser for newlines in text
+def nl2br(value):
+    result = value.replace("\n\n", "<br>")
+    return result
+
+
 def main():
     args = parse_args()
 
@@ -85,11 +92,18 @@ def main():
     # Set up Jinja environment
     template_dir = os.path.dirname(os.path.abspath(args.template))
     env = Environment(loader=FileSystemLoader(template_dir))
+    env.filters["nl2br"] = nl2br
     template = env.get_template(os.path.basename(args.template))
 
     # Read and process the CSV file
-    df = pd.read_csv(args.csv)
+    df = pd.read_csv(args.csv, lineterminator="\n")
     df = df.dropna(subset=["id"])  # Drop rows without an id
+
+    # Handle newlines in text fields
+    text_columns = ["effect", "quote", "source"]
+    for col in text_columns:
+        if col in df.columns:
+            df[col] = df[col].str.replace("\n", "\n\n")
 
     # Initialize webdriver
     driver = setup_webdriver(args.browser)

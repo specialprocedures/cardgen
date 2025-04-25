@@ -10,7 +10,7 @@
         </div>
         <div class="card-body">
           <div class="card-effect">{{ card.effect }}</div>
-          <div class="card-quote">{{ card.quote }}</div>
+          <div class="card-quote">{{ card.quote|nl2br|safe }}</div>
           <div class="card-source">{{ card.source }}</div>
         </div>
         <div class="card-footer">Risk 2025</div>
