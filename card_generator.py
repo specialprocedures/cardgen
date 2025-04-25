@@ -15,25 +15,9 @@ from selenium.webdriver.edge.options import Options as EdgeOptions
 def parse_args():
     parser = argparse.ArgumentParser(description="Generate trading cards from CSV data")
     parser.add_argument(
-        "--csv",
+        "game_dir",
         type=str,
-        default="cards.csv",
-        help="Path to the CSV file containing card data",
-    )
-    parser.add_argument(
-        "--template",
-        type=str,
-        default="card_template.html",
-        help="Path to the HTML template file",
-    )
-    parser.add_argument(
-        "--output-dir",
-        type=str,
-        default="cards",
-        help="Directory to output generated cards",
-    )
-    parser.add_argument(
-        "--styles", type=str, default="styles.css", help="Path to CSS styles file"
+        help="Path to the game directory containing cards.csv, card_template.html, and styles.css",
     )
     parser.add_argument(
         "--browser",
@@ -83,20 +67,31 @@ def nl2br(value):
 
 def main():
     args = parse_args()
+    game_dir = Path(args.game_dir)
+
+    # Check required files exist
+    required_files = {
+        "CSV": game_dir / "cards.csv",
+        "Template": game_dir / "card_template.html",
+        "Styles": game_dir / "styles.css",
+    }
+
+    for name, path in required_files.items():
+        if not path.exists():
+            raise FileNotFoundError(f"{name} file not found: {path}")
 
     # Set up paths
-    base_dir = os.path.dirname(os.path.abspath(args.csv))
-    cards_dir = Path(args.output_dir)
+    base_dir = str(game_dir)
+    cards_dir = game_dir / "cards"
     cards_dir.mkdir(exist_ok=True)
 
     # Set up Jinja environment
-    template_dir = os.path.dirname(os.path.abspath(args.template))
-    env = Environment(loader=FileSystemLoader(template_dir))
+    env = Environment(loader=FileSystemLoader(base_dir))
     env.filters["nl2br"] = nl2br
-    template = env.get_template(os.path.basename(args.template))
+    template = env.get_template("card_template.html")
 
     # Read and process the CSV file
-    df = pd.read_csv(args.csv, lineterminator="\n")
+    df = pd.read_csv(required_files["CSV"], lineterminator="\n")
     df = df.dropna(subset=["id"])  # Drop rows without an id
 
     # Handle newlines in text fields
@@ -107,7 +102,6 @@ def main():
 
     # Initialize webdriver
     driver = setup_webdriver(args.browser)
-    css_path = os.path.abspath(args.styles)
 
     try:
         # Process each card
@@ -132,7 +126,7 @@ def main():
                 <html>
                 <head>
                     <base href="file://{base_dir}/">
-                    <link rel="stylesheet" href="file://{css_path}">
+                    <link rel="stylesheet" href="file://{required_files['Styles']}">
                 </head>
                 <body>
                 {card_html}
