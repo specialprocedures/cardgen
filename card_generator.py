@@ -1,38 +1,70 @@
 import os
 import pandas as pd
 from pathlib import Path
+import argparse
 
 # HTML templating
 from jinja2 import Environment, FileSystemLoader
-
-# import webdriver
 from selenium import webdriver
 from selenium.webdriver.firefox.options import Options
-
-# Set up Jinja environment
-env = Environment(loader=FileSystemLoader("."))
-template = env.get_template("card_template.html")
-
-# Ensure cards directory exists
-cards_dir = Path("cards")
-cards_dir.mkdir(exist_ok=True)
-
-# Read and process the CSV file
-df = pd.read_csv("cards.csv")
-df = df.dropna(subset=["id"])  # Drop rows without an id
-
-# the interface for turning on headless mode
-options = Options()
-options.add_argument("-headless")
-
-# Get the base directory for resources
-base_dir = os.path.dirname(os.path.abspath(__file__))
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.edge.options import Options as EdgeOptions
 
 
-def get_image_path(card_id):
+def parse_args():
+    parser = argparse.ArgumentParser(description="Generate trading cards from CSV data")
+    parser.add_argument(
+        "--csv",
+        type=str,
+        default="cards.csv",
+        help="Path to the CSV file containing card data",
+    )
+    parser.add_argument(
+        "--template",
+        type=str,
+        default="card_template.html",
+        help="Path to the HTML template file",
+    )
+    parser.add_argument(
+        "--output-dir",
+        type=str,
+        default="cards",
+        help="Directory to output generated cards",
+    )
+    parser.add_argument(
+        "--styles", type=str, default="styles.css", help="Path to CSS styles file"
+    )
+    parser.add_argument(
+        "--browser",
+        type=str,
+        choices=["firefox", "chrome", "edge"],
+        default="firefox",
+        help="Browser to use for rendering",
+    )
+    return parser.parse_args()
+
+
+def setup_webdriver(browser_name):
+    if browser_name == "firefox":
+        options = Options()
+        options.add_argument("-headless")
+        return webdriver.Firefox(options=options)
+    elif browser_name == "chrome":
+        options = ChromeOptions()
+        options.add_argument("--headless")
+        return webdriver.Chrome(options=options)
+    elif browser_name == "edge":
+        options = EdgeOptions()
+        options.add_argument("--headless")
+        return webdriver.Edge(options=options)
+    else:
+        raise ValueError(f"Unsupported browser: {browser_name}")
+
+
+def get_image_path(card_id, base_dir):
     """Try both .jpg and .png extensions"""
-    jpg_path = f"img/cards/{card_id}.jpg"
-    png_path = f"img/cards/{card_id}.png"
+    jpg_path = os.path.join(base_dir, f"img/cards/{card_id}.jpg")
+    png_path = os.path.join(base_dir, f"img/cards/{card_id}.png")
 
     if os.path.exists(jpg_path):
         return os.path.abspath(jpg_path)
@@ -42,51 +74,75 @@ def get_image_path(card_id):
         raise FileNotFoundError(f"No image found for {card_id}")
 
 
-# Process each card
-driver = webdriver.Firefox(options=options)
-css_path = os.path.abspath("styles.css")
-for _, card_data in df.iterrows():
+def main():
+    args = parse_args()
+
+    # Set up paths
+    base_dir = os.path.dirname(os.path.abspath(args.csv))
+    cards_dir = Path(args.output_dir)
+    cards_dir.mkdir(exist_ok=True)
+
+    # Set up Jinja environment
+    template_dir = os.path.dirname(os.path.abspath(args.template))
+    env = Environment(loader=FileSystemLoader(template_dir))
+    template = env.get_template(os.path.basename(args.template))
+
+    # Read and process the CSV file
+    df = pd.read_csv(args.csv)
+    df = df.dropna(subset=["id"])  # Drop rows without an id
+
+    # Initialize webdriver
+    driver = setup_webdriver(args.browser)
+    css_path = os.path.abspath(args.styles)
+
     try:
-        # Convert row to dict and handle image path
-        card_dict = card_data.to_dict()
-        card_dict["image_url"] = get_image_path(card_dict["id"])
+        # Process each card
+        for _, card_data in df.iterrows():
+            try:
+                # Convert row to dict and handle image path
+                card_dict = card_data.to_dict()
+                card_dict["image_url"] = get_image_path(card_dict["id"], base_dir)
 
-        # Render the card HTML
-        card_html = template.render(card=card_dict)
+                # Render the card HTML
+                card_html = template.render(card=card_dict)
 
-        # Create full HTML with CSS
-        full_html_string = f"""
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <base href="file://{base_dir}/">
-            <link rel="stylesheet" href="file://{css_path}">
-        </head>
-        <body>
-        {card_html}
-        </body>
-        </html>
-        """
+                # Create full HTML with CSS
+                full_html_string = f"""
+                <!DOCTYPE html>
+                <html>
+                <head>
+                    <base href="file://{base_dir}/">
+                    <link rel="stylesheet" href="file://{css_path}">
+                </head>
+                <body>
+                {card_html}
+                </body>
+                </html>
+                """
 
-        # Save HTML file
-        html_path = cards_dir / f"{card_dict['id']}.html"
-        with open(html_path, "w") as f:
-            f.write(full_html_string)
+                # Save HTML file
+                html_path = cards_dir / f"{card_dict['id']}.html"
+                with open(html_path, "w") as f:
+                    f.write(full_html_string)
 
-        # Generate PNG
-        driver.get(f"file://{html_path.absolute()}")
-        driver.execute_script('document.body.style.MozTransform = "scale(5)";')
-        driver.execute_script('document.body.style.MozTransformOrigin = "0 0";')
+                # Generate PNG
+                driver.get(f"file://{html_path.absolute()}")
+                driver.execute_script('document.body.style.MozTransform = "scale(5)";')
+                driver.execute_script('document.body.style.MozTransformOrigin = "0 0";')
 
-        # Get the card element and take screenshot
-        element = driver.find_element("class name", "trading-card")
-        png_path = cards_dir / f"{card_dict['id']}.png"
-        element.screenshot(str(png_path))
+                # Get the card element and take screenshot
+                element = driver.find_element("class name", "trading-card")
+                png_path = cards_dir / f"{card_dict['id']}.png"
+                element.screenshot(str(png_path))
 
-        print(f"Generated card {card_dict['id']}")
+                print(f"Generated card {card_dict['id']}")
 
-    except Exception as e:
-        print(f"Error processing card {card_dict['id']}: {e}")
+            except Exception as e:
+                print(f"Error processing card {card_dict['id']}: {e}")
+    finally:
+        # Close the browser
+        driver.quit()
 
-# Close the browser
-driver.quit()
+
+if __name__ == "__main__":
+    main()
