@@ -1,6 +1,8 @@
 # Card Generator
 
-A Python-based tool for generating high-quality trading cards from CSV data using HTML templates and browser rendering. Perfect for prototyping card games, creating custom trading cards, or generating print-ready card assets.
+A Python-based tool for generating high-quality trading cards from CSV data using HTML templates and browser rendering. 
+
+Generate print-ready card assets from a csv with css and jinja.
 
 ## Prerequisites
 
