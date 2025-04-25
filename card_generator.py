@@ -46,19 +46,6 @@ def setup_webdriver(browser_name):
         raise ValueError(f"Unsupported browser: {browser_name}")
 
 
-def get_image_path(card_id, base_dir):
-    """Try both .jpg and .png extensions"""
-    jpg_path = os.path.join(base_dir, f"img/cards/{card_id}.jpg")
-    png_path = os.path.join(base_dir, f"img/cards/{card_id}.png")
-
-    if os.path.exists(jpg_path):
-        return os.path.abspath(jpg_path)
-    elif os.path.exists(png_path):
-        return os.path.abspath(png_path)
-    else:
-        raise FileNotFoundError(f"No image found for {card_id}")
-
-
 # Setup parser for newlines in text
 def nl2br(value):
     result = value.replace("\n\n", "<br>")
@@ -115,7 +102,15 @@ def main():
                 if cost is not None:
                     card_dict["cost"] = int(cost)
 
-                card_dict["image_url"] = get_image_path(card_dict["id"], base_dir)
+                # Use image_path from CSV and make it absolute
+                if card_dict.get("image_path"):
+                    card_dict["image_url"] = os.path.abspath(
+                        os.path.join(base_dir, card_dict["image_path"])
+                    )
+                else:
+                    print(
+                        f"Warning: No image path specified for card {card_dict['id']}"
+                    )
 
                 # Render the card HTML
                 card_html = template.render(card=card_dict)

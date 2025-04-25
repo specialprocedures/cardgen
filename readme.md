@@ -17,11 +17,11 @@ A Python-based tool for generating high-quality trading cards from CSV data usin
 
 ## Quick Start
 
-1. Prepare your card data in a CSV file with columns: id, name, type, cost, effect, quote, source
-2. Place card images in `img/cards/` directory (supports .jpg and .png)
+1. Prepare your card data in a CSV file with columns: id, name, type, cost, effect, quote, source, image_path
+2. Place card images in your preferred directory structure
 3. Run the generator:
    ```bash
-   python card_generator.py --csv games/your_game/cards.csv --template games/your_game/card_template.html --styles games/your_game/styles.css
+   python card_generator.py games/your_game
    ```
 
 ## File Structure
@@ -33,43 +33,39 @@ games/
         card_template.html  # HTML template for cards
         cards.csv          # Card data
         styles.css         # Card styling
-        img/
-            cards/        # Card images
-                image1.jpg
-                image2.png
+        img/              # Image directory (can be organized as needed)
         fonts/           # Custom fonts (optional)
 ```
 
 ### Required Files
 
 1. `cards.csv`: Contains card data with the following columns:
-   - id: Unique identifier (matches image filename)
+   - id: Unique identifier for the card
    - name: Card name
    - type: Card type
    - cost: Card cost
    - effect: Card effect/description
    - quote: Flavor text (optional)
    - source: Quote source (optional)
+   - image_path: Path to the card's image file, relative to the game directory
 
 2. `card_template.html`: HTML template using Jinja2 syntax
 3. `styles.css`: CSS styling for cards
-4. Card images in `img/cards/` directory
 
 ## CLI Options
 
 ```
-python card_generator.py [OPTIONS]
+python card_generator.py [GAME_DIR] [OPTIONS]
+
+Arguments:
+  GAME_DIR          Path to the game directory containing cards.csv, card_template.html, and styles.css
 
 Options:
-  --csv TEXT         Path to the CSV file containing card data (default: cards.csv)
-  --template TEXT    Path to the HTML template file (default: card_template.html)
-  --output-dir TEXT  Directory to output generated cards (default: cards)
-  --styles TEXT      Path to CSS styles file (default: styles.css)
-  --browser TEXT     Browser to use for rendering: firefox|chrome|edge (default: firefox)
+  --browser TEXT    Browser to use for rendering: firefox|chrome|edge (default: firefox)
 ```
 
 ## Output
 
-The generator creates two files for each card:
+The generator creates two files for each card in the game directory's `cards` folder:
 1. An HTML file for debugging and style adjustments
 2. A PNG file of the rendered card
