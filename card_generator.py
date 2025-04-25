@@ -80,6 +80,7 @@ def main():
     # Read and process the CSV file
     df = pd.read_csv(required_files["CSV"], lineterminator="\n")
     df = df.dropna(subset=["id"])  # Drop rows without an id
+    df["serial_number"] = df.index + 1  # Add serial number based on index
 
     # Initialize webdriver
     driver = setup_webdriver(args.browser)
