@@ -125,8 +125,8 @@ def main():
                 <!DOCTYPE html>
                 <html>
                 <head>
-                    <base href="file://{base_dir}/">
-                    <link rel="stylesheet" href="file://{required_files['Styles']}">
+                    <base href="file://{os.path.abspath(base_dir)}/">
+                    <link rel="stylesheet" href="file://{os.path.abspath(required_files['Styles'])}">
                 </head>
                 <body>
                 {card_html}
