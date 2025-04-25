@@ -67,7 +67,7 @@
     transform: translate(-50%, -50%);
     /* Center the cut area within the bleed */
     /* Optional: Add a temporary border here during testing to visualize the cut line */
-    border: 1px dashed blue;
+    /* border: 1px dashed blue; */
 
 }
 
@@ -93,7 +93,7 @@
     /* Split the 2.28in width evenly */
 
     /* Define your grid rows - adjust as needed */
-    grid-template-rows: .4fr 2fr .3fr 1fr 1fr;
+    grid-template-rows: 0.2in 1.55in 0.2in auto 0.2in;
     /* Example: rows for ID/Name, Type/Cost/Count, Image/Effect, Quote, Source */
     /* grid-template-rows: repeat(6, auto); */
 
@@ -179,7 +179,7 @@
 .card-image img {
     display: block;
     max-width: 100%;
-    height: auto;
+    height: 1.55in;
 }
 
 .card-body {
