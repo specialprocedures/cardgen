@@ -80,7 +80,7 @@ def get_style_links(base_dir, card_dict):
 
     # If no valid styles found, fall back to default styles.css
     if not style_links:
-        default_style = os.path.join(base_dir, "styles.css")
+        default_style = os.path.join(base_dir, "base.css")
         if os.path.exists(default_style):
             style_links.append(
                 f'<link rel="stylesheet" href="file://{os.path.abspath(default_style)}">'
@@ -140,7 +140,7 @@ def main():
 
                 # Handle serial number
                 card_dict["serial_number"] = int(card_dict["serial_number"])
-                
+
                 # Use image_path from CSV and make it absolute
                 if pd.notna(card_dict.get("image_path")):
                     card_dict["image_url"] = os.path.abspath(

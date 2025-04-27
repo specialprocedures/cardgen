@@ -59,7 +59,7 @@ games/
 2. `card_template.html`: HTML template using Jinja2 syntax
 3. CSS file(s): At least one CSS file is required. The system will look for CSS files in the following order:
    1. Per-card style files specified in the CSV (style_path and supplementary_style)
-   2. Default styles.css in the game directory
+   2. Default base.css in the game directory
 
 ## CSV Data Handling
 
