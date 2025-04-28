@@ -21,7 +21,8 @@ Generate print-ready card assets from a csv with css and jinja.
 
 1. Prepare your card data in a CSV file with columns: id, name, type, cost, effect, quote, source, image_path
 2. Place card images in your preferred directory structure
-3. Run the generator:
+3. Create your HTML templates in the templates directory
+4. Run the generator:
    ```bash
    python card_generator.py games/your_game
    ```
@@ -32,14 +33,16 @@ To create your own card set, follow this structure:
 ```
 games/
     your_game/
-        card_template.html  # HTML template for cards
-        cards.csv          # Card data
-        styles/           # Directory for CSS files (optional)
-            base.css      # Base styles
-            custom.css    # Additional styles
-        styles.css        # Default CSS file (optional if using styles directory)
-        img/              # Image directory (can be organized as needed)
-        fonts/           # Custom fonts (optional)
+        templates/        # Directory for HTML templates
+            card_template.html  # Main card template
+            back_template.html  # Card back template (optional)
+        cards.csv        # Card data
+        styles/         # Directory for CSS files (optional)
+            base.css    # Base styles
+            custom.css  # Additional styles
+        styles.css      # Default CSS file (optional if using styles directory)
+        img/            # Image directory (can be organized as needed)
+        fonts/         # Custom fonts (optional)
 ```
 
 ### Required Files
@@ -56,7 +59,7 @@ games/
    - style_path: Path to the card's base CSS file (optional)
    - supplementary_style: Path to additional CSS file for this card (optional)
 
-2. `card_template.html`: HTML template using Jinja2 syntax
+2. `templates/card_template.html`: HTML template using Jinja2 syntax
 3. CSS file(s): At least one CSS file is required. The system will look for CSS files in the following order:
    1. Per-card style files specified in the CSV (style_path and supplementary_style)
    2. Default base.css in the game directory
@@ -74,7 +77,7 @@ games/
 python card_generator.py [GAME_DIR] [OPTIONS]
 
 Arguments:
-  GAME_DIR          Path to the game directory containing cards.csv and card_template.html
+  GAME_DIR          Path to the game directory containing cards.csv and templates/card_template.html
 
 Options:
   --browser TEXT    Browser to use for rendering: firefox|chrome|edge (default: firefox)
