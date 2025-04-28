@@ -1,15 +1,9 @@
 import os
-import re
 import pandas as pd
 from pathlib import Path
 import argparse
-
-# HTML templating
 from jinja2 import Environment, FileSystemLoader
-from selenium import webdriver
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.chrome.options import Options as ChromeOptions
-from selenium.webdriver.edge.options import Options as EdgeOptions
+from html2png import setup_webdriver, html2png
 
 
 def parse_args():
@@ -27,23 +21,6 @@ def parse_args():
         help="Browser to use for rendering",
     )
     return parser.parse_args()
-
-
-def setup_webdriver(browser_name):
-    if browser_name == "firefox":
-        options = Options()
-        options.add_argument("-headless")
-        return webdriver.Firefox(options=options)
-    elif browser_name == "chrome":
-        options = ChromeOptions()
-        options.add_argument("--headless")
-        return webdriver.Chrome(options=options)
-    elif browser_name == "edge":
-        options = EdgeOptions()
-        options.add_argument("--headless")
-        return webdriver.Edge(options=options)
-    else:
-        raise ValueError(f"Unsupported browser: {browser_name}")
 
 
 # Setup parser for newlines in text
@@ -98,7 +75,7 @@ def main():
     # Check required files exist
     required_files = {
         "CSV": game_dir / "cards.csv",
-        "Template": game_dir / "card_template.html",
+        "Template": game_dir / "templates" / "card_template.html",
     }
 
     for name, path in required_files.items():
@@ -110,55 +87,33 @@ def main():
     cards_dir = game_dir / "cards"
     cards_dir.mkdir(exist_ok=True)
 
-    # Set up Jinja environment
-    env = Environment(loader=FileSystemLoader(base_dir))
+    # Set up Jinja environment with templates directory
+    templates_dir = game_dir / "templates"
+    env = Environment(loader=FileSystemLoader(templates_dir))
     env.filters["nl2br"] = nl2br
-    template = env.get_template("card_template.html")
 
     # Read and process the CSV file
     df = pd.read_csv(required_files["CSV"], lineterminator="\n")
     df = df.dropna(subset=["id"])  # Drop rows without an id
     df["serial_number"] = df.index + 1  # Add serial number based on index
 
-    # Initialize webdriver
+    # Initialize webdriver once for all cards
     driver = setup_webdriver(args.browser)
 
     try:
-        # Process each card
-        for _, card_data in df.iterrows():
-            try:
-                # Convert row to dict and handle image path
-                card_dict = card_data.to_dict()
+        # Generate back templates first (only once per type)
+        generated_backs = set()
+        for card_type in df["type"].unique():
+            card_type = card_type.lower()
+            if card_type not in generated_backs:
+                # Generate card back
+                back_template_name = f"back_{card_type}.html"
+                back_template = env.get_template(back_template_name)
+                back_html = back_template.render()
 
-                card_dict["total_cards"] = len(df)
-
-                # Handle cost - convert to int if present, otherwise empty string
-                if pd.notna(card_dict.get("cost")):
-                    card_dict["cost"] = int(card_dict["cost"])
-                else:
-                    card_dict["cost"] = ""
-
-                # Handle serial number
-                card_dict["serial_number"] = int(card_dict["serial_number"])
-
-                # Use image_path from CSV and make it absolute
-                if pd.notna(card_dict.get("image_path")):
-                    card_dict["image_url"] = os.path.abspath(
-                        os.path.join(base_dir, str(card_dict["image_path"]))
-                    )
-                else:
-                    print(
-                        f"Warning: No image path specified for card {card_dict['id']}"
-                    )
-
-                # Get style links for this card
-                style_links = get_style_links(base_dir, card_dict)
-
-                # Render the card HTML
-                card_html = template.render(card=card_dict)
-
-                # Create full HTML with styles
-                full_html_string = f"""
+                # Create full HTML for back
+                style_links = get_style_links(base_dir, {"type": card_type})
+                back_html_string = f"""
                 <!DOCTYPE html>
                 <html>
                 <head>
@@ -166,33 +121,109 @@ def main():
                     {style_links}
                 </head>
                 <body>
-                {card_html}
+                {back_html}
                 </body>
                 </html>
                 """
 
-                # Save HTML file
-                html_path = cards_dir / f"{card_dict['id']}.html"
-                with open(html_path, "w") as f:
-                    f.write(full_html_string)
+                # Save back HTML file
+                back_html_path = cards_dir / f"back_{card_type}.html"
+                with open(back_html_path, "w") as f:
+                    f.write(back_html_string)
 
-                # Generate PNG
-                driver.get(f"file://{html_path.absolute()}")
-                driver.execute_script('document.body.style.MozTransform = "scale(5)";')
-                driver.execute_script('document.body.style.MozTransformOrigin = "0 0";')
+                # Generate back PNG
+                back_png_path = cards_dir / f"back_{card_type}.png"
+                html2png(
+                    back_html_path,
+                    back_png_path,
+                    element_class="trading-card",
+                    driver=driver,
+                )
 
-                # Get the card element and take screenshot
-                element = driver.find_element("class name", "trading-card")
-                png_path = cards_dir / f"{card_dict['id']}.png"
-                element.screenshot(str(png_path))
+                # Clean up back HTML file
+                if back_html_path.exists():
+                    os.remove(back_html_path)
 
-                print(f"Generated card {card_dict['id']}")
+                generated_backs.add(card_type)
+                print(f"Generated {card_type} back template")
 
-            except Exception as e:
-                print(f"Error processing card {card_dict['id']}: {e}")
+        # Process each card front using the same browser session
+        for _, card_data in df.iterrows():
+            process_card(card_data, env, base_dir, cards_dir, driver, len(df))
     finally:
         # Close the browser
         driver.quit()
+
+
+def process_card(card_data, env, base_dir, cards_dir, driver, total_cards):
+    try:
+        # Convert row to dict and handle image path
+        card_dict = card_data.to_dict()
+        card_dict["total_cards"] = total_cards
+
+        # Handle cost - convert to int if present, otherwise empty string
+        if pd.notna(card_dict.get("cost")):
+            card_dict["cost"] = int(card_dict["cost"])
+        else:
+            card_dict["cost"] = ""
+
+        # Handle null quotes and sources
+        for key in ["quote", "source"]:
+            if pd.notna(card_dict.get(key)):
+                card_dict[key] = str(card_dict[key])
+            else:
+                card_dict[key] = ""
+
+        # Handle serial number
+        card_dict["serial_number"] = int(card_dict["serial_number"])
+
+        # Use image_path from CSV and make it absolute
+        if pd.notna(card_dict.get("image_path")):
+            card_dict["image_url"] = os.path.abspath(
+                os.path.join(base_dir, str(card_dict["image_path"]))
+            )
+        else:
+            print(f"Warning: No image path specified for card {card_dict['id']}")
+
+        # Get style links for this card
+        style_links = get_style_links(base_dir, card_dict)
+
+        # Render the front card HTML
+        template = env.get_template("card_template.html")
+        card_html = template.render(card=card_dict)
+
+        # Create full HTML with styles
+        full_html_string = f"""
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <base href="file://{os.path.abspath(base_dir)}/">
+            {style_links}
+        </head>
+        <body>
+        {card_html}
+        </body>
+        </html>
+        """
+
+        # Save HTML file
+        html_path = cards_dir / f"{card_dict['id']}.html"
+        try:
+            with open(html_path, "w") as f:
+                f.write(full_html_string)
+
+            # Generate PNG using existing browser session
+            png_path = cards_dir / f"{card_dict['id']}.png"
+            html2png(html_path, png_path, element_class="trading-card", driver=driver)
+
+            print(f"Generated card {card_dict['id']}")
+        finally:
+            # Clean up HTML file after PNG is generated
+            if html_path.exists():
+                os.remove(html_path)
+
+    except Exception as e:
+        print(f"Error processing card {card_dict['id']}: {e}")
 
 
 if __name__ == "__main__":

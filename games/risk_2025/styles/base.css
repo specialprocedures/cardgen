@@ -6,8 +6,8 @@
 }
 
 @font-face {
-    font-family: 'Capture';
-    src: url('../fonts/capture.ttf') format('truetype');
+    font-family: 'BlackOps';
+    src: url('../fonts/blackopps.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
@@ -125,25 +125,25 @@
 }
 
 .card-name {
-    font-family: 'Capture', sans-serif;
+    font-family: 'BlackOps', sans-serif;
     font-size: .6em;
     font-weight: bold;
     text-shadow: 1px 1px 2px black;
     text-align: center;
+    font-kerning: normal;
     vertical-align: middle;
-    padding: 4px 0;
+    padding: 3px 0;
     letter-spacing: 0.51px;
     color: white;
     width: 100%;
     grid-area: name;
-    z-index: -1;
     background-image: url("../img/style/stoned.jpg");
     outline: 1px solid rgb(255, 255, 255);
 }
 
 .card-type,
 .card-cost {
-    font-family: 'Capture', sans-serif;
+    font-family: 'BlackOps', sans-serif;
     font-size: 0.5em;
     text-shadow: 1px 1px 2px black;
     padding: 4px;
@@ -204,7 +204,7 @@
     font-style: italic;
     color: black;
     padding: 2.5%;
-    padding-top: 0px;
+    padding-top: 2px;
     padding-bottom: 0;
     white-space: pre-wrap;
     font-size: 0.45em;
@@ -217,7 +217,7 @@
     font-style: italic;
     color: black;
     padding: 2.5%;
-    padding-top: 1%;
+    padding-top: 0px;
     font-size: 0.45em;
 }
 

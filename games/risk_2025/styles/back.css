@@ -1,0 +1,120 @@
+@font-face {
+    font-family: 'BlackOps';
+    src: url('../fonts/blackopps.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.trading-card {
+    width: 2.72in;
+    height: 3.7in;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+}
+
+/* Action card back styling */
+.trading-card.action-back {
+    background-image:
+        linear-gradient(135deg,
+            rgba(50, 0, 0, 0.7),
+            rgba(197, 12, 12, 0.9)),
+        url("../img/style/dark.jpg");
+    background-blend-mode: multiply;
+}
+
+/* Event card back styling */
+.trading-card.event-back {
+    background-image:
+        linear-gradient(135deg,
+            rgba(0, 0, 50, 0.7),
+            rgba(24, 12, 197, 0.9)),
+        url("../img/style/dark.jpg");
+    background-blend-mode: multiply;
+}
+
+.bleed-area {
+    width: 100%;
+    /* Takes full size of trading-card */
+    height: 100%;
+    /* Takes full size of trading-card */
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* Add background image or color here */
+    /* background-color: #921010; Example background */
+    /* background-image: url('your_background_image.png'); */
+    background-size: cover;
+    background-position: center;
+}
+
+.cut-area {
+    /* This area represents the final card size */
+    width: 2.48in;
+    /* Cut width */
+    height: 3.46in;
+    /* Cut height */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* Center the cut area within the bleed */
+    /* Optional: Add a temporary border here during testing to visualize the cut line */
+    /* border: 1px dashed blue; */
+
+}
+
+.safe-area {
+    width: 2.28in;
+    height: 3.27in;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+}
+
+/* Action card back safe area */
+.action-back .safe-area {
+    background-image:
+        linear-gradient(135deg,
+            rgba(50, 0, 0, 0.587),
+            rgba(197, 12, 12, 0.9)),
+        url("../img/style/scratched.jpg");
+    background-blend-mode: multiply;
+}
+
+/* Event card back safe area */
+.event-back .safe-area {
+    background-image:
+        linear-gradient(135deg,
+            rgba(0, 0, 50, 0.587),
+            rgba(24, 12, 197, 0.9)),
+        url("../img/style/scratched.jpg");
+    background-blend-mode: multiply;
+}
+
+.card-name {
+    font-family: 'BlackOps', sans-serif;
+    font-size: 0.7in;
+    /* Adjust size as needed */
+    text-align: center;
+    /* Center the text to frame, should be x and y centered */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-shadow: 12px 2px 4px rgba(0, 0, 0, 0.7);
+}
+
+/* Action card back text */
+.action-back .card-name {
+    color: #ffffff;
+}
+
+/* Event card back text */
+.event-back .card-name {
+    color: #e6e6ff;
+}
