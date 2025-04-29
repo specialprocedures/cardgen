@@ -1,112 +1,69 @@
 @font-face {
-    font-family: 'Dirty';
-    src: url('../fonts/dirty.otf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
-@font-face {
     font-family: 'BlackOps';
     src: url('../fonts/blackopps.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
 }
 
-@font-face {
-    font-family: 'Anton';
-    src: url('../fonts/Anton-Regular.ttf') format('truetype');
-    font-weight: normal;
-    font-style: normal;
-}
-
 
 .trading-card {
-    /* This outer container can help with overall page layout if placing multiple cards later */
-    /* For single card generation, its primary role is to contain the bleed area */
-    width: 2.72in;
-    /* Corresponds to the bleed width */
-    height: 3.7in;
-    /* Corresponds to the bleed height */
+    width: 69mm;
+    height: 94mm;
     margin: 0;
-    /* No margin needed for the card itself, layout handled by body/container */
     padding: 0;
-    /* No padding needed for the card itself */
     position: relative;
-    /* Needed for positioning inner elements */
     overflow: hidden;
-    /* Hide anything outside the bleed */
-    /* background-color: #000000; Example background */
-    background-image: url("../img/style/dark.jpg");
     background-size: cover;
 }
 
 .bleed-area {
+    /* This takes the full size of the container */
     width: 100%;
-    /* Takes full size of trading-card */
     height: 100%;
-    /* Takes full size of trading-card */
     position: absolute;
     top: 0;
     left: 0;
-    /* Add background image or color here */
-    /* background-color: #921010; Example background */
-    /* background-image: url('your_background_image.png'); */
     background-size: cover;
     background-position: center;
 }
 
 .cut-area {
-    /* This area represents the final card size */
-    width: 2.48in;
-    /* Cut width */
-    height: 3.46in;
-    /* Cut height */
+    /* This area represents the final card size, i.e., excluding bleed */
+    width: 63mm;
+    height: 88mm;
     position: absolute;
     top: 50%;
     left: 50%;
-    transform: translate(-50%, -50%);
     /* Center the cut area within the bleed */
-    /* Optional: Add a temporary border here during testing to visualize the cut line */
-    /* border: 1px dashed blue; */
-
+    transform: translate(-50%, -50%);
 }
 
 .safe-area {
     /* This area is where important content should reside */
-    width: 2.28in;
-    /* Safe width */
-    height: 3.27in;
-    /* Safe height */
+    width: 58mm;
+    height: 83mm;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    /* Center the safe area within the cut area */
     box-sizing: border-box;
-    /* Include padding in the element's total width and height */
 
     background-color: rgba(219, 219, 219, 0.575);
-    /* Example background */
 
     display: grid;
-    grid-template-columns: 1.14in 1.14in;
-    /* Split the 2.28in width evenly */
+    grid-template-columns: 29mm 29mm;
+    grid-template-rows: 5mm 34mm 5mm 34mm 5mm;
 
-    /* Define your grid rows - adjust as needed */
-    grid-template-rows: 0.2in 1.55in 0.175in auto 0.15in;
-    /* Example: rows for ID/Name, Type/Cost/Count, Image/Effect, Quote, Source */
-    /* grid-template-rows: repeat(6, auto); */
-
-    /* Define named grid areas for easier placement */
     grid-template-areas:
         "name name"
         "image image"
-        "type cost"
+        "center center"
         "body body"
         "footer footer";
 
     /* gap: 5px; Add space between grid items */
     outline: 1px solid rgb(255, 255, 255);
+    border-radius: 5px;
 }
 
 /* Basic styling for the new fields - you'll need to refine these */
@@ -126,46 +83,18 @@
 
 .card-name {
     font-family: 'BlackOps', sans-serif;
-    font-size: .6em;
+    font-size: 2.25mm;
     font-weight: bold;
     text-shadow: 1px 1px 2px black;
     text-align: center;
     font-kerning: normal;
     vertical-align: middle;
-    padding: 3px 0;
+    padding: 1mm;
     letter-spacing: 0.51px;
     color: white;
     width: 100%;
     grid-area: name;
     background-image: url("../img/style/stoned.jpg");
-    outline: 1px solid rgb(255, 255, 255);
-}
-
-.card-type,
-.card-cost {
-    font-family: 'BlackOps', sans-serif;
-    font-size: 0.5em;
-    text-shadow: 1px 1px 2px black;
-    padding: 4px;
-    color: white;
-    grid-area: type;
-    font-weight: bold;
-    background-image: url("../img/style/stoned.jpg");
-    border-bottom: 1px solid rgb(255, 255, 255);
-}
-
-.card-type {
-    grid-area: type;
-    text-align: left;
-}
-
-.card-cost {
-    grid-area: cost;
-    text-align: right;
-}
-
-.card-count {
-    grid-area: count;
 }
 
 .card-image {
@@ -185,17 +114,64 @@
     object-position: center;
 }
 
+.card-center {
+    outline: 1px solid rgb(255, 255, 255);
+    grid-area: center;
+    display: grid;
+    padding-left: 2mm;
+    padding-right: 2mm;
+    grid-template-rows: auto auto;
+    /* auto for effect, 1fr for spacing, auto for quote and source */
+    grid-template-areas:
+        "type cost"
+
+}
+
+.card-type,
+.card-cost {
+    font-family: 'BlackOps', sans-serif;
+    font-size: 2mm;
+    text-shadow: 1px 1px 2px black;
+    padding: 1mm;
+    color: white;
+    font-weight: bold;
+
+}
+
+.card-type {
+    grid-area: type;
+    text-align: left;
+}
+
+.card-cost {
+    grid-area: cost;
+    text-align: right;
+}
+
+.card-count {
+    grid-area: count;
+}
+
 .card-body {
+    padding: 2mm;
     grid-area: body;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    /* auto for effect, 1fr for spacing, auto for quote and source */
+    grid-template-areas:
+        "effect"
+        "."
+        "quote"
+        "source";
 }
 
 .card-effect {
+    font-size: 2.25mm;
     grid-area: effect;
     text-align: justify;
     color: black;
-    padding: 2.5%;
-    padding-bottom: 3px;
-    /* font-style: italic; */
+    /* padding: 1mm; */
+    padding-bottom: 1mm;
 }
 
 .card-quote {
@@ -203,41 +179,116 @@
     text-align: justify;
     font-style: italic;
     color: black;
-    padding: 2.5%;
-    padding-top: 2px;
+    /* padding: 2mm; */
+    padding-top: 0mm;
     padding-bottom: 0;
     white-space: pre-wrap;
-    font-size: 0.45em;
+    font-size: 2mm;
 }
 
 .card-source {
     grid-area: source;
     text-align: right;
-    margin-top: bottom;
     font-style: italic;
     color: black;
-    padding: 2.5%;
-    padding-top: 0px;
-    font-size: 0.45em;
+    padding: 2mm;
+    padding-top: 0;
+    font-size: 2.2mm;
 }
 
 .card-footer {
     grid-area: footer;
     align-self: end;
-    font-size: 0.4em;
+    font-size: 1.5mm;
     border-top: 1px solid rgb(255, 255, 255);
-    background-image: url("../img/style/stoned.jpg");
     color: white;
-    padding: 2px 4px;
+    padding: 1.2mm 1mm;
+    padding-left: 2mm;
+    padding-right: 2mm;
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
 .card-footer-left {
-    text-align: left;
+
+    align-items: left;
+    ;
 }
 
 .card-footer-right {
-    text-align: right;
+
+    align-items: right;
+    ;
+}
+
+.card-footer-center {
+    align-items: center;
+    justify-content: center;
+}
+
+/* Action card styling */
+.trading-card.action-card {
+    background-image:
+        linear-gradient(135deg,
+            rgba(50, 0, 10, 0.1),
+            rgba(100, 0, 20, 0.5)),
+        url("../img/style/dark.jpg") !important;
+    background-size: cover;
+    background-blend-mode: screen;
+}
+
+.action-card .card-name,
+.action-card .card-center,
+.action-card .card-footer {
+    background-image:
+        linear-gradient(135deg,
+            rgba(100, 0, 20, 0.1),
+            rgba(50, 0, 10, 0.5)),
+        url("../img/style/dark.jpg");
+    background-blend-mode: screen;
+}
+
+/* Event card styling */
+.trading-card.event-card {
+    background-image:
+        linear-gradient(135deg,
+            rgba(0, 0, 50, 0.1),
+            rgba(20, 0, 100, 0.5)),
+        url("../img/style/dark.jpg") !important;
+    background-size: cover;
+    background-blend-mode: screen;
+}
+
+.event-card .card-name,
+.event-card .card-center,
+.event-card .card-footer {
+    background-image: linear-gradient(135deg,
+            rgba(20, 0, 100, 0.5),
+            rgba(10, 0, 50, 0.1)),
+        url("../img/style/dark.jpg");
+    background-blend-mode: screen;
+}
+
+/* Back-specific overrides */
+.safe-area.back {
+    background: none;
+    outline: none;
+    border-radius: 0;
+    display: block;
+    /* Override grid display */
+    grid-template-areas: none;
+    grid-template-columns: none;
+    grid-template-rows: none;
+}
+
+.safe-area.back .card-name {
+    font-size: 15mm;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    width: auto;
+    background: none;
 }

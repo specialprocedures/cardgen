@@ -1,12 +1,14 @@
-<div class="trading-card">
+<div class="trading-card {{ card.type.lower() }}-card">
   <div class="bleed-area">
     <div class="cut-area">
       <div class="safe-area">
         <div class="card-name">{{ card.name }}</div>
-        <div class="card-type">{{ card.type }}</div>
-        <div class="card-cost">{{ card.cost }} {{'Billion Euros' if card.cost != '' else ''}}</div>
         <div class="card-image">
           <img src="{{ card.image_url }}" alt="{{ card.name }}" />
+        </div>
+        <div class='card-center'>
+        <div class="card-type">{{ card.type.title() }}</div>
+        <div class="card-cost">{{ card.cost }} {{'Billion Euros' if card.cost != '' else ''}}</div>
         </div>
         <div class="card-body">
           <div class="card-effect">{{ card.effect }}</div>
@@ -14,7 +16,8 @@
           <div class="card-source">{{ card.source if card.source != 'nan' }}</div>
         </div>
         <div class="card-footer">
-          <div class="card-footer-left">Risk 2025 | {{ card.serial_number }}/{{ card.total_cards }}</div>
+          <div class="card-footer-left">Risk 2025: Humf's 40 Edition</div>
+          <div class="card-footer-center">{{ card.serial_number }}/{{ card.total_cards }}</div>
           <div class="card-footer-right">🄯 2025 K-Block Games</div>
         </div>
       </div>

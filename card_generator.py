@@ -43,21 +43,9 @@ def get_style_links(base_dir, card_dict):
         else:
             print(f"Warning: Style file not found: {style_path}")
 
-    # Add supplementary stylesheet if specified
-    if "supplementary_style" in card_dict and pd.notna(
-        card_dict["supplementary_style"]
-    ):
-        supp_style_path = os.path.join(base_dir, str(card_dict["supplementary_style"]))
-        if os.path.exists(supp_style_path):
-            style_links.append(
-                f'<link rel="stylesheet" href="file://{os.path.abspath(supp_style_path)}">'
-            )
-        else:
-            print(f"Warning: Supplementary style file not found: {supp_style_path}")
-
-    # If no valid styles found, fall back to default styles.css
+    # If no valid styles found, fall back to default base.css
     if not style_links:
-        default_style = os.path.join(base_dir, "base.css")
+        default_style = os.path.join(base_dir, "styles", "base.css")
         if os.path.exists(default_style):
             style_links.append(
                 f'<link rel="stylesheet" href="file://{os.path.abspath(default_style)}">'
@@ -218,6 +206,7 @@ def process_card(card_data, env, base_dir, cards_dir, driver, total_cards):
 
             print(f"Generated card {card_dict['id']}")
         finally:
+            pass
             # Clean up HTML file after PNG is generated
             if html_path.exists():
                 os.remove(html_path)
