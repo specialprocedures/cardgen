@@ -45,7 +45,7 @@ def get_style_links(base_dir, card_dict):
 
     # If no valid styles found, fall back to default base.css
     if not style_links:
-        default_style = os.path.join(base_dir, "styles", "base.css")
+        default_style = os.path.join(base_dir, "styles", "tarot.css")
         if os.path.exists(default_style):
             style_links.append(
                 f'<link rel="stylesheet" href="file://{os.path.abspath(default_style)}">'

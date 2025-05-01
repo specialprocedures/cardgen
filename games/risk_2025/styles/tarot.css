@@ -1,0 +1,295 @@
+@font-face {
+    font-family: 'BlackOps';
+    src: url('../fonts/blackopps.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
+.trading-card {
+    width: 70mm;
+    height: 120mm;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    background-size: cover;
+}
+
+.bleed-area {
+    /* This takes the full size of the container */
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background-size: cover;
+    background-position: center;
+}
+
+.cut-area {
+    /* This area represents the final card size, i.e., excluding bleed */
+    width: 70mm;
+    height: 120mm;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* Center the cut area within the bleed */
+    transform: translate(-50%, -50%);
+}
+
+.safe-area {
+    /* This area is where important content should reside */
+    width: 70mm;
+    height: 120mm;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    box-sizing: border-box;
+
+    background-color: rgba(219, 219, 219, 0.575);
+
+    display: grid;
+    grid-template-columns: 35mm 35mm;
+    grid-template-rows: 10mm 50mm 5mm 50mm 5mm;
+
+    grid-template-areas:
+        "name name"
+        "image image"
+        "center center"
+        "body body"
+        "footer footer";
+
+    /* gap: 5px; Add space between grid items */
+    outline: 1px solid rgb(255, 255, 255);
+    border-radius: 0px;
+}
+
+/* Basic styling for the new fields - you'll need to refine these */
+.card-id,
+.card-name,
+.card-type,
+.card-cost,
+.card-count,
+.card-effect,
+.card-quote,
+.card-source {
+    font-family: serif;
+    font-size: 2em;
+    color: #333;
+    /* margin: 0.05in; */
+}
+
+.card-name {
+    font-family: 'BlackOps', sans-serif;
+    font-size: 3.5mm;
+    /* font-weight: bold; */
+    text-shadow: 1px 1px 2px black;
+    text-align: center;
+    font-kerning: normal;
+    vertical-align: middle;
+    padding-top: 3mm;
+    padding-bottom: 3mm;
+    letter-spacing: 0px;
+    color: white;
+    width: 100%;
+    grid-area: name;
+    background-image: url("../img/style/stoned.jpg");
+}
+
+.card-image {
+    grid-area: image;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    outline: 1px solid rgb(255, 255, 255);
+    overflow: hidden;
+}
+
+.card-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+.card-center {
+    outline: 1px solid rgb(255, 255, 255);
+    grid-area: center;
+    display: grid;
+    padding-left: 2mm;
+    padding-right: 2mm;
+    grid-template-rows: auto auto;
+    /* auto for effect, 1fr for spacing, auto for quote and source */
+    grid-template-areas:
+        "type cost"
+
+}
+
+.card-type,
+.card-cost {
+    font-family: 'BlackOps', sans-serif;
+    font-size: 2.5mm;
+    text-shadow: 1px 1px 2px black;
+    padding: 1mm;
+    color: white;
+    /* font-weight: bold; */
+
+}
+
+.card-type {
+    grid-area: type;
+    text-align: left;
+}
+
+.card-cost {
+    grid-area: cost;
+    text-align: right;
+}
+
+.card-count {
+    grid-area: count;
+}
+
+.card-body {
+    padding: 2mm;
+    grid-area: body;
+    display: grid;
+    grid-template-rows: auto 1fr auto auto;
+    /* auto for effect, 1fr for spacing, auto for quote and source */
+    grid-template-areas:
+        "effect"
+        "."
+        "quote"
+        "source";
+}
+
+.card-effect {
+    font-size: 3mm;
+    grid-area: effect;
+    text-align: justify;
+    color: black;
+    /* padding: 1mm; */
+    padding-bottom: 1mm;
+}
+
+.card-quote {
+    grid-area: quote;
+    text-align: justify;
+    font-style: italic;
+    color: black;
+    /* padding: 2mm; */
+    padding-top: 0mm;
+    padding-bottom: 0;
+    white-space: pre-wrap;
+    font-size: 2.5mm;
+}
+
+.card-source {
+    grid-area: source;
+    text-align: right;
+    font-style: italic;
+    color: black;
+    padding: 2mm;
+    padding-top: 0;
+    font-size: 2.2mm;
+}
+
+.card-footer {
+    grid-area: footer;
+    align-self: end;
+    font-size: 1.5mm;
+    border-top: 1px solid rgb(255, 255, 255);
+    color: white;
+    padding: 1.2mm 1mm;
+    padding-left: 2mm;
+    padding-right: 2mm;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-footer-left {
+
+    align-items: left;
+    ;
+}
+
+.card-footer-right {
+
+    align-items: right;
+    ;
+}
+
+.card-footer-center {
+    align-items: center;
+    justify-content: center;
+}
+
+/* Action card styling */
+.trading-card.action-card {
+    background-image:
+        linear-gradient(135deg,
+            rgba(50, 0, 10, 0.1),
+            rgba(100, 0, 20, 0.5)),
+        url("../img/style/dark.jpg") !important;
+    background-size: cover;
+    background-blend-mode: screen;
+}
+
+.action-card .card-name,
+.action-card .card-center,
+.action-card .card-footer {
+    background-image:
+        linear-gradient(135deg,
+            rgba(100, 0, 20, 0.1),
+            rgba(50, 0, 10, 0.5)),
+        url("../img/style/dark.jpg");
+    background-blend-mode: screen;
+}
+
+/* Event card styling */
+.trading-card.event-card {
+    background-image:
+        linear-gradient(135deg,
+            rgba(0, 0, 50, 0.1),
+            rgba(20, 0, 100, 0.5)),
+        url("../img/style/dark.jpg") !important;
+    background-size: cover;
+    background-blend-mode: screen;
+}
+
+.event-card .card-name,
+.event-card .card-center,
+.event-card .card-footer {
+    background-image: linear-gradient(135deg,
+            rgba(20, 0, 100, 0.5),
+            rgba(10, 0, 50, 0.1)),
+        url("../img/style/dark.jpg");
+    background-blend-mode: screen;
+}
+
+/* Back-specific overrides */
+.safe-area.back {
+    background: none;
+    outline: none;
+    border-radius: 0;
+    display: block;
+    /* Override grid display */
+    grid-template-areas: none;
+    grid-template-columns: none;
+    grid-template-rows: none;
+}
+
+.safe-area.back .card-name {
+    font-size: 15mm;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0;
+    width: auto;
+    background: none;
+}
